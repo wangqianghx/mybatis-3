@@ -1,6 +1,8 @@
 <!--
-Thank you for your contribution!
-请将您的问题发送到邮件列表 https://groups.google.com/group/mybatis-user
+❌ 不要在这里问问题❗️
+⭕️ 请将您的问题发送到邮件列表
+請用英文寫
+https://groups.google.com/group/mybatis-user
 
 Question?
 ======================
@@ -28,7 +30,7 @@ Feature request?
 <!-- BUG REPORT FORM -->
 
 ## MyBatis version
-3.3.1
+3.x.x
 
 ## Database vendor and version
 

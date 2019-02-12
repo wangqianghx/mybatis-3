@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -873,8 +873,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          JSR-310(Date and Time API)から提供されているクラスを使用する場合は、
-          <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>を使用することができます。
+          バージョン3.4.5より、JSR-310(Date and Time API)のクラスがデフォルトでサポートされました。
         </p>
         <table>
           <thead>
@@ -921,7 +920,7 @@ public class Author {
                 Short, short
               </td>
               <td>
-                NUMERIC または SHORT INTEGER 互換の型
+                NUMERIC または SMALLINT 互換の型
               </td>
             </tr>
             <tr>
@@ -943,7 +942,7 @@ public class Author {
                 Long, long
               </td>
               <td>
-                NUMERIC または LONG INTEGER 互換の型
+                NUMERIC または BIGINT 互換の型
               </td>
             </tr>
             <tr>
@@ -1157,13 +1156,145 @@ public class Author {
             </tr>
             <tr>
               <td>
-                <code>EnumOrdinalTypeHandler</code>
+                EnumOrdinalTypeHandler
               </td>
               <td>
                 Enumeration Type
               </td>
               <td>
                 コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SqlxmlTypeHandler
+              </td>
+              <td>
+                java.lang.String
+              </td>
+              <td>
+                SQLXML
+              </td>
+            </tr>
+            <tr>
+              <td>
+                InstantTypeHandler
+              </td>
+              <td>
+                java.time.Instant
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTypeHandler
+              </td>
+              <td>
+                java.time.LocalDate
+              </td>
+              <td>
+                DATE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ZonedDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.ZonedDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearTypeHandler
+              </td>
+              <td>
+                java.time.Year
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                MonthTypeHandler
+              </td>
+              <td>
+                java.time.Month
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearMonthTypeHandler
+              </td>
+              <td>
+                java.time.YearMonth
+              </td>
+              <td>
+                VARCHAR または LONGVARCHAR
+              </td>
+            </tr>
+            <tr>
+              <td>
+                JapaneseDateTypeHandler
+              </td>
+              <td>
+                java.time.chrono.JapaneseDate
+              </td>
+              <td>
+                DATE
               </td>
             </tr>
           </tbody>
@@ -1271,16 +1402,16 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         </p>
 
       </subsection>
-      
+
       <subsection name="Handling Enums">
         <p>
           <code>Enum</code> （列挙型）をマップする場合、
           <code>EnumTypeHandler</code> または <code>EnumOrdinalTypeHandler</code> のどちらかを使うことになります。
         </p>
-        
+
         <p>例えば数値の丸めモード（java.math.RoundingMode）を格納する場合、デフォルトでは <code>EnumTypeHandler</code> が使われ、各 <code>Enum</code> は名前の文字列（DOWN, HALF_UP, etc.）に変換されます。
         </p>
-        
+
         <b>他の TypeHandler が特定のクラスを対象としているのに対し、<code>EnumTypeHandler</code> は <code>Enum</code> を継承した任意のクラスを対象とする特別な TypeHandler です。</b>
 
         <p>では名前以外の値を格納したい場合、例えばデータベース管理者が数値で格納して欲しいと言ってきた場合はどうすれば良いのでしょうか。
@@ -1305,10 +1436,6 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
 		<id column="id" property="id"/>
@@ -1325,7 +1452,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
 	    )
 	</insert>
-	
+
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
 		<id column="id" property="id"/>
 		<result column="name" property="name"/>
@@ -1636,6 +1763,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>poolTimeToWait – 接続の取得に長時間を要した場合にログを出力し、接続の再取得を試みる機会を与えるための低レベルの設定です（プールが誤って設定された場合、無限に待機状態となってしまうのを防ぐため）。
             デフォルト: 20000ms （20秒）
           </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
+          </li>
           <li>poolPingQuery – プールされた接続が正常で、リクエストを受け付けられる状態にあるかどうか確認するためにデータベースに送信される ping クエリを設定します。
             デフォルトは "NO PING QUERY SET" で、一般的なドライバーであれば問い合わせは失敗し、適切なエラーメッセージが出力されるはずです。
           </li>
@@ -1670,7 +1805,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>
           上記のように指定すると、"encoding=UTF8" というプロパティが InitialContext のインスタンス生成時にコンストラクタに渡されます。
         </p>
-        
+
         <p>
           上記以外の DataSource を利用する場合は <code>org.apache.ibatis.datasource.DataSourceFactory</code> インターフェイスを実装したアダプタを作成します。
         </p>
@@ -1687,7 +1822,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-        
+
 public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
   public C3P0DataSourceFactory() {
@@ -1707,7 +1842,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="password" value="root"/>
 </dataSource>
 ]]></source>
-        
+
       </subsection>
 
       <subsection name="databaseIdProvider">
